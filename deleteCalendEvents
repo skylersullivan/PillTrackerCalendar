@@ -1,0 +1,49 @@
+/*
+This code deletes all evens within a certain timeframe that have a certain name. I created this code so that I can quickly delete calendar events if I make a mistake when creating events.
+
+
+*/
+
+
+function deleteEventsForMedication1() {
+  var spreadsheetId = '"removed_this_because_it_is_private'; // Your spreadsheet ID
+  var sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName("Pill Tracker");
+
+  if (!sheet) {
+    Logger.log("Error: Sheet 'Pill Tracker' not found! Check the sheet name.");
+    return;
+  }
+
+  var data = sheet.getDataRange().getValues(); // Fetch all rows
+  Logger.log("Data fetched: " + data.length + " rows.");
+
+  if (data.length < 2) {
+    Logger.log("No data found beyond the header row.");
+    return;
+  }
+
+  var calendar = CalendarApp.getCalendarById("removed_this_because_it_is_private");//remember to change id back later
+  if (!calendar) {
+    throw new Error("Calendar ID not found. Check your Calendar ID!");
+  }
+
+  // Define the medication name you want to delete events for
+  var targetMedication = "Med2";
+
+  // Define the custom date range (from January 2024 to March 2026)
+  var startDate = new Date(2024, 0, 1); // January 1st, 2024 (Month is 0-based)
+  var endDate = new Date(2026, 1, 1);   // February 1st, 2026 (Month is 0-based)
+
+  // Fetch events within the specified date range
+  var events = calendar.getEvents(startDate, endDate);
+
+  // Loop through events and delete those that match the medication name in the title
+  events.forEach(function(event) {
+    if (event.getTitle().includes(targetMedication)) {
+      Logger.log("Deleting event: " + event.getTitle());
+      event.deleteEvent();
+    }
+  });
+
+  Logger.log("Finished deleting events for " + targetMedication);
+}
