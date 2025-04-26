@@ -1,10 +1,14 @@
 /*
+After creating a google sheet you can click on extenstions and then apps script. That's where I wrote my code.
 I used Google apps script to create a program that takes information from google sheets and uses that information to create calendar events that list how many
-pills you have left from the day you got the pills to the last pill you have left. Instead of manually putting in an event for each day, this script will automatically create all of the events.
+pills you have left from the day you got the pills to the last pill you have left.  Instead of manually putting in an event for each day, this script will 
+automatically create all of the events.
 All you have to do is update the date you picked up the pill on google sheets, and then click run on this script and it will create all of the events.
 
-It can create hundreds of events at once if you want it to. Someone I know has over ten different prescriptions to keep track of and this helps her keep track of when to order their prescriptions.
+It can create hundreds of events at once if you want it to. Someone I know has over ten different prescriptions to keep track of and this helps 
+them keep track of when to order their prescriptions.
 
+Here is the code for it. I had to remove some things for privacy reasons but most of it is the same.
 */
 
 function addEventsForMedication1() {
