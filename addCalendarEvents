@@ -1,0 +1,75 @@
+/*
+I used Google apps script to create a program that takes information from google sheets and uses that information to create calendar events that list how many
+pills you have left from the day you got the pills to the last pill you have left. Instead of manually putting in an event for each day, this script will automatically create all of the events.
+All you have to do is update the date you picked up the pill on google sheets, and then click run on this script and it will create all of the events.
+
+It can create hundreds of events at once if you want it to. Someone I know has over ten different prescriptions to keep track of and this helps her keep track of when to order their prescriptions.
+
+*/
+
+function addEventsForMedication1() {
+  var spreadsheetId = 'removing_this_because_it's_private'; // Your spreadsheet ID
+  var sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName("Pill Tracker");
+
+  if (!sheet) {
+    Logger.log("Error: Sheet 'Pill Tracker' not found! Check the sheet name.");
+    return;
+  }
+
+  var data = sheet.getDataRange().getValues(); // Fetch all rows
+  Logger.log("Data fetched: " + data.length + " rows.");
+
+  var calendar = CalendarApp.getCalendarById("removing_this_because_it's_private"); //I changed the calendar ID so that I can use a separate calendar for the example.
+  if (!calendar) {                                                                                                                          //remember to change back to other calendar later
+    throw new Error("Calendar ID not found. Check your Calendar ID!");
+  }
+
+  var targetMedication = "Med1"; // medication name
+
+  for (var i = 1; i < data.length; i++) {
+    var pillName = data[i][0]; // Column A: Pill Name
+
+    if (pillName !== targetMedication) {
+      continue; // Skip non-matching medications
+    }
+
+    var startingQuantity = data[i][1]; // Column B: Starting Quantity
+    var lastRefillDate = data[i][2]; // Column C: Last Refill Date
+
+    var refillDate = new Date(Date.parse(lastRefillDate));
+
+    // Start event logging from the refill date
+    var eventDate = new Date(refillDate);  // Start counting from refill date
+    var pillsLeft = startingQuantity; // Start the countdown from the starting quantity
+
+    var startTime = new Date();
+    startTime.setHours(10, 0, 0); //change back to 16 later
+
+    // Create events for each pill, starting from the refill date
+    for (var j = 0; j < startingQuantity; j++) {
+      var pillText = (pillsLeft === 1) ? "1 pill" : `${pillsLeft} pills`;
+
+      var eventTitle = `${pillName} - ${pillText} left`;
+
+      var eventStartTime = new Date(eventDate);
+      eventStartTime.setHours(startTime.getHours(), startTime.getMinutes());
+
+      var eventEndTime = new Date(eventStartTime);
+      eventEndTime.setHours(eventStartTime.getHours() + 1); // 1 hour duration
+
+      var event = calendar.createEvent(eventTitle, eventStartTime, eventEndTime);
+
+      // Check and apply yellow color based on conditions
+      if ((startingQuantity > 30 && pillsLeft <= 5) || (startingQuantity <= 30 && pillsLeft <= 3)) {
+        event.setColor(CalendarApp.EventColor.YELLOW);
+        Logger.log(`Yellow event created: ${pillName} - ${pillText} on ${eventStartTime.toDateString()}`);
+      } else {
+        Logger.log(`Event created: ${pillName} - ${pillText} on ${eventStartTime.toDateString()}`);
+      }
+
+      // Move to the next day and decrease the pill count
+      eventDate.setDate(eventDate.getDate() + 1);
+      pillsLeft--; // Decrease pill count after each event
+    }
+  }
+}
