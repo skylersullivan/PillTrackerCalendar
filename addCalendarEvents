@@ -5,10 +5,7 @@ pills you have left from the day you got the pills to the last pill you have lef
 automatically create all of the events.
 All you have to do is update the date you picked up the pill on google sheets, and then click run on this script and it will create all of the events.
 
-It can create hundreds of events at once if you want it to. Someone I know has over ten different prescriptions to keep track of and this helps 
-them keep track of when to order their prescriptions.
-
-Here is the code for it. I had to remove some things for privacy reasons but most of it is the same.
+It can create hundreds of events at once if you want it to. Here is the code for it. I had to remove some things for privacy reasons but most of it is the same.
 */
 
 function addEventsForMedication1() {
