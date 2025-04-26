@@ -1,5 +1,5 @@
 /*
-This code deletes all evens within a certain timeframe that have a certain name. I created this code so that I can quickly delete calendar events if I make a mistake when creating events.
+This code deletes all events within a certain timeframe that have a certain name. I created this code so that I can quickly delete calendar events if I make a mistake when creating events.
 
 
 */
